@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab Ducky — login test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 22rem; margin: 4rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.1rem; }
+    label { display: block; margin-top: 1rem; font-size: 0.9rem; }
+    input { width: 100%; padding: 0.5rem; margin-top: 0.25rem; box-sizing: border-box; }
+    button { margin-top: 1.25rem; padding: 0.5rem 1rem; cursor: pointer; }
+    .hint { font-size: 0.8rem; color: #444; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Connexion lab (Chrome save password)</h1>
+  <p>Machine autorisee uniquement. Utilise un identifiant <strong>factice</strong> (ex. <code>test-ducky</code> / <code>TestPass-123!</code>).</p>
+  <form action="/login" method="post" autocomplete="on">
+    <label for="user">Identifiant</label>
+    <input id="user" name="username" type="text" autocomplete="username" required>
+    <label for="pass">Mot de passe</label>
+    <input id="pass" name="password" type="password" autocomplete="current-password" required>
+    <button type="submit">Se connecter</button>
+  </form>
+  <p class="hint">Si Chrome propose d'enregistrer le mot de passe, accepte. Puis lance <code>test-chrome-extract.ps1</code>.</p>
+</body>
+</html>

@@ -1,0 +1,1 @@
+& pwsh -NoProfile -ExecutionPolicy Bypass -File "$PSScriptRoot\chrome-extract.ps1"

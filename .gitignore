@@ -1,0 +1,15 @@
+# Lab / secrets — ne pas pousser
+**/wlan-ducky/
+**/wifi-leonardo.txt
+**/chrome-leonardo*.txt
+.env
+.env.*
+**/exfil.local.ps1
+
+# ChromElevator (binaires + archive release)
+Leonardo/lab/chromelevator/extracted/
+Leonardo/lab/chromelevator/*.exe
+Leonardo/lab/chromelevator/*.zip
+
+# Artefacts de build Arduino
+**/build/
