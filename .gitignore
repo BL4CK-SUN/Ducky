@@ -1,0 +1,23 @@
+# Générés au build / flash
+**/layout_config.h
+**/wifi_b64_oneline.txt
+**/wifi_ps_b64.h
+
+# Artefacts Arduino / Digispark
+**/build/
+*.hex
+*.eep
+*.elf
+*.o
+*.d
+compile_commands.json
+
+# Exports sensibles
+**/wifi-leonardo.txt
+**/wlan-ducky/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.swp
+)
