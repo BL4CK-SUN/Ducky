@@ -7,4 +7,4 @@ if ($raw.Length -ge 3 -and [int][char]$raw[0] -eq 0xFEFF) { $raw = $raw.Substrin
 [System.IO.File]::WriteAllText($dest, $raw, (New-Object System.Text.UTF8Encoding $false))
 $shell = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
 if (-not $shell) { $shell = (Get-Command powershell -ErrorAction Stop).Source }
-& $shell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File $dest -AttemptDisable -NoNotepad
+& $shell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File $dest -AttemptDisable
