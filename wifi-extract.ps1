@@ -1,4 +1,7 @@
 # Lab authorized machines only: layout actif (audit) + export Wi-Fi (XML, indépendant du layout).
+param(
+    [switch]$NoNotepad
+)
 $ErrorActionPreference = 'SilentlyContinue'
 
 function Get-DuckyKeyboardLayoutInfo {
@@ -94,4 +97,5 @@ Get-ChildItem -LiteralPath $d -Filter '*.xml' | Sort-Object Name | ForEach-Objec
 }
 
 $lines | Set-Content -LiteralPath $h -Encoding UTF8
-Start-Process notepad.exe -ArgumentList $h
+if (-not $NoNotepad) { Start-Process notepad.exe -ArgumentList $h }
+Write-Output $h
